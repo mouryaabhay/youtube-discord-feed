@@ -1,6 +1,9 @@
 name: YouTube New Video Notifier
 
 on:
+  # Runs every 10 hours (00:00, 10:00, 20:00 UTC). GitHub Actions requires this
+  # to be a literal cron string here — it can't be pulled from src/configs/config.js.
+  # All other configurable values live in that file instead.
   schedule:
     - cron: "0 */10 * * *"
   workflow_dispatch:
@@ -36,7 +39,6 @@ jobs:
       - name: Check YouTube channels and notify Discord
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
-          YT_DESCRIPTION_LIMIT: ${{ vars['YT_DESCRIPTION_LIMIT'] }}
         run: node ./src/webhookYoutubeRunner.js
 
       - name: Commit updated video state

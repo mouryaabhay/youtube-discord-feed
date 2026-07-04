@@ -16,9 +16,6 @@ const __filename = fileURLToPath(import.meta.url);
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-// Channel @handles rarely change, so re-scraping the channel page is only worth
-// doing occasionally rather than on every 10-minute cron run.
-const HANDLE_CACHE_TTL_MS = 30 * 24 * 60 * 60 * 1000;
 const CANONICAL_HANDLE_REGEX = /"canonicalBaseUrl":"\/(@[^"]+)"/;
 
 /**
@@ -71,15 +68,16 @@ class youtubeFeedService {
    */
   async getChannelHandle(channelId) {
     const cached = this.channelInfo.get(channelId);
-    if (cached && Date.now() - cached.fetchedAt < HANDLE_CACHE_TTL_MS) {
+    if (cached && Date.now() - cached.fetchedAt < YOUTUBE_FEED.HANDLE_CACHE_TTL_MS) {
       return cached.handle;
     }
 
     try {
+      const { MAX_RETRIES, INITIAL_DELAY_MS } = YOUTUBE_FEED.HANDLE_FETCH_RETRY;
       const response = await retryWithBackoff(
         () => fetch(`https://www.youtube.com/channel/${channelId}`),
-        2,
-        1000
+        MAX_RETRIES,
+        INITIAL_DELAY_MS
       );
       const html = await response.text();
       const match = html.match(CANONICAL_HANDLE_REGEX);
@@ -109,10 +107,11 @@ class youtubeFeedService {
       if (!channelId) continue;
 
       try {
+        const { MAX_RETRIES, INITIAL_DELAY_MS } = YOUTUBE_FEED.FEED_FETCH_RETRY;
         const feed = await retryWithBackoff(
           () => this.parser.parseURL(feedUrl(channelId)),
-          3,
-          1000
+          MAX_RETRIES,
+          INITIAL_DELAY_MS
         );
 
         // Prefer the feed's live channel title over the static config name, so a
@@ -166,15 +165,15 @@ class youtubeFeedService {
             this.lastSeen.set(channelId, this.buildState(item));
             await saveLastSeen(this.lastSeen);
           }
-          // Throttle Discord sends to ~1 per 300ms to respect rate limits
-          await sleep(300);
+          // Throttle Discord sends to respect rate limits
+          await sleep(YOUTUBE_FEED.THROTTLE_MS.PER_VIDEO);
         }
       } catch (error) {
         this.logFetchError(name, channelId, error);
       }
 
-      // Throttle between channels to ~1 channel per 500ms (rate limit safety)
-      await sleep(500);
+      // Throttle between channels (rate limit safety)
+      await sleep(YOUTUBE_FEED.THROTTLE_MS.PER_CHANNEL);
     }
   }
 
@@ -212,7 +211,7 @@ class youtubeFeedService {
   async processAndSendVideo(webhookClient, item, { channelName, handle, color }) {
     try {
       const embed = new EmbedBuilder()
-        .setColor(color || "#ED4245")
+        .setColor(color || YOUTUBE_FEED.DEFAULT_EMBED_COLOR)
         .setTitle(item.title)
         .setURL(item.link)
         .setDescription(this.getDescription(item))

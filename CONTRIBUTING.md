@@ -69,9 +69,10 @@ git checkout -b feature/your-feature-name
 
 ```env
 DISCORD_WEBHOOK_URL=
-YT_DESCRIPTION_LIMIT=350
 ```
 
-See [.env.example](.env.example) for the full list. For GitHub Actions,
-prefer the repository **Secret** `DISCORD_WEBHOOK_URL` and repository
-**Variables** for the rest, rather than committing values.
+See [.env.example](.env.example). `DISCORD_WEBHOOK_URL` is the only value
+that needs to be a secret; every other configurable value (description
+length, embed color, retry/throttle timing, handle cache TTL) lives in
+[src/configs/config.js](src/configs/config.js) — edit it directly rather
+than adding new env vars or GitHub repo variables.

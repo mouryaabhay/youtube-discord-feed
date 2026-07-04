@@ -81,8 +81,10 @@ npm install
 
    - Go to **Settings → Secrets and variables → Actions**.
    - In **Secrets**, create `DISCORD_WEBHOOK_URL` = your Discord webhook URL.
-   - (Optional) In **Variables**, create `YT_DESCRIPTION_LIMIT` to override
-     the default embed description length (350 characters).
+     This is the only value that needs to live in GitHub settings — every
+     other configurable value (description length, embed color, retry/
+     throttle timing, handle cache TTL) lives in
+     [src/configs/config.js](src/configs/config.js).
    - Go to **Settings → Actions → General** and ensure **Workflow
      permissions** is set to **Read and write permissions** (required to
      commit `data/lastSeenVideos.json` and `data/channelInfo.json`).
@@ -123,7 +125,6 @@ extra API call per channel).
 
 ```env
 DISCORD_WEBHOOK_URL=
-YT_DESCRIPTION_LIMIT=350
 ```
 
 2. Run:
