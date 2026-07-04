@@ -1,0 +1,37 @@
+{
+  "name": "youtube-discord-feed",
+  "version": "1.0.0",
+  "main": "src/webhookYoutubeRunner.js",
+  "type": "module",
+  "scripts": {
+    "start": "node ./src/webhookYoutubeRunner.js",
+    "youtube:webhook": "node ./src/webhookYoutubeRunner.js"
+  },
+  "author": "Mourya Abhay Amarjeet",
+  "license": "MIT",
+  "description": "GitHub Actions runner that watches YouTube channel RSS feeds and posts new uploads to a Discord webhook as an embed with a link button.",
+  "keywords": [
+    "youtube",
+    "discord",
+    "webhook",
+    "rss",
+    "github-actions",
+    "notifier"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mouryaabhay/youtube-discord-feed.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mouryaabhay/youtube-discord-feed/issues"
+  },
+  "homepage": "https://github.com/mouryaabhay/youtube-discord-feed#readme",
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "discord.js": "^14.16.3",
+    "dotenv": "^16.4.7",
+    "rss-parser": "^3.13.0"
+  }
+}
