@@ -24,6 +24,11 @@ jobs:
           echo "Triggered at UTC: $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
           echo "Event: ${{ github.event_name }}"
 
+      - name: Debug YouTube feed entries
+        run: |
+          curl -L --max-time 20 -s 'https://www.youtube.com/feeds/videos.xml?channel_id=UCtBpEQqDUZqHr8JTeZteebA' | \
+            grep -n '<entry>\|<yt:videoId>\|<title>\|<published>' | sed -n '1,80p' || true
+
       - name: Checkout
         uses: actions/checkout@v4
 

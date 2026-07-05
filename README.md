@@ -90,9 +90,8 @@ npm install
      commit `data/lastSeenVideos.json` and `data/channelInfo.json`).
 
 5. Go to the **Actions** tab, open **YouTube New Video Notifier**, and click
-   **Run workflow** once to establish the baseline for each configured
-   channel. The first run only records each channel's current latest video —
-   it won't post anything.
+  **Run workflow** once to verify the configured channel and send the newest
+  available video.
 
 6. After that, any newly uploaded video is posted automatically on the next
     scheduled run (every 30 minutes, configurable in

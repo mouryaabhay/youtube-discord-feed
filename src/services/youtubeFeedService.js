@@ -135,12 +135,19 @@ class youtubeFeedService {
         const previous = this.lastSeen.get(channelId);
 
         if (!previous) {
-          // First time seeing this channel: record the current latest video without
-          // posting, so the whole back catalog doesn't flood Discord.
           const newest = sortedItems[sortedItems.length - 1];
-          this.lastSeen.set(channelId, this.buildState(newest));
-          await saveLastSeen(this.lastSeen);
-          console.info(`[INFO] Recorded baseline video for ${channelName}: ${newest.videoId}`);
+          const wasSent = await this.processAndSendVideo(
+            webhookClient,
+            newest,
+            { channelName, handle: await this.getChannelHandle(channelId), color }
+          );
+
+          if (wasSent) {
+            this.lastSeen.set(channelId, this.buildState(newest));
+            await saveLastSeen(this.lastSeen);
+            console.info(`[INFO] First run sent newest video for ${channelName}: ${newest.videoId}`);
+          }
+
           continue;
         }
 
