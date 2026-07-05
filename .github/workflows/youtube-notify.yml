@@ -1,11 +1,11 @@
 name: YouTube New Video Notifier
 
 on:
-  # Runs every 10 hours (00:00, 10:00, 20:00 UTC). GitHub Actions requires this
+  # Runs every 30 minutes. GitHub Actions requires this
   # to be a literal cron string here — it can't be pulled from src/configs/config.js.
   # All other configurable values live in that file instead.
   schedule:
-    - cron: "0 */10 * * *"
+    - cron: "*/30 * * * *"
   workflow_dispatch:
 
 permissions:

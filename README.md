@@ -95,7 +95,7 @@ npm install
    it won't post anything.
 
 6. After that, any newly uploaded video is posted automatically on the next
-   scheduled run (every 10 hours, configurable in
+    scheduled run (every 30 minutes, configurable in
    [.github/workflows/youtube-notify.yml](.github/workflows/youtube-notify.yml)).
    GitHub's scheduled triggers aren't exact — on public repos they can slip
    by up to a couple of hours during high load — but that's harmless here:

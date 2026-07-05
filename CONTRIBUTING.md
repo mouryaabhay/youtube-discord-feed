@@ -56,7 +56,7 @@ git checkout -b feature/your-feature-name
   - New channels get a one-time baseline (record latest video, don't post)
     so the back catalog doesn't flood Discord.
 - Keep YouTube feed request volume conservative — avoid tightening the
-  schedule far below the current 10-hour interval in
+  schedule far below the current 30-minute interval in
   [.github/workflows/youtube-notify.yml](.github/workflows/youtube-notify.yml)
   without good reason. State is compared against the last video actually
   posted (not a time window), so a longer interval just means bigger

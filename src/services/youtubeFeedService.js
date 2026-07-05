@@ -18,6 +18,14 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 const CANONICAL_HANDLE_REGEX = /"canonicalBaseUrl":"\/(@[^"]+)"/;
 
+function parseItemDate(item) {
+  const rawDate = item.isoDate || item.pubDate;
+  if (!rawDate) return null;
+
+  const parsedDate = new Date(rawDate);
+  return Number.isNaN(parsedDate.getTime()) ? null : parsedDate;
+}
+
 /**
  * Retries transient operations (network/API) with exponential backoff.
  */
@@ -138,11 +146,15 @@ class youtubeFeedService {
 
         // Strictly-newer-than-last-sent, and never the exact video already recorded —
         // guards against duplicate sends even if two entries share a publish timestamp.
-        const newItems = sortedItems.filter(
-          (item) =>
-            item.videoId !== previous.videoId &&
-            new Date(item.isoDate || item.pubDate) > new Date(previous.publishedAt)
-        );
+        const previousPublishedAt = new Date(previous.publishedAt);
+        const newItems = sortedItems.filter((item) => {
+          if (item.videoId === previous.videoId) return false;
+
+          const itemDate = parseItemDate(item);
+          if (!itemDate) return true;
+
+          return itemDate > previousPublishedAt;
+        });
 
         if (newItems.length === 0) {
           console.log(`[INFO] No new videos for ${channelName}.`);
@@ -180,7 +192,7 @@ class youtubeFeedService {
   buildState(item) {
     return {
       videoId: item.videoId,
-      publishedAt: item.isoDate || item.pubDate,
+      publishedAt: parseItemDate(item)?.toISOString() ?? new Date().toISOString(),
     };
   }
 
@@ -189,7 +201,11 @@ class youtubeFeedService {
    */
   sortItemsByPubDateAsc(items) {
     return [...items].sort(
-      (a, b) => new Date(a.isoDate || a.pubDate) - new Date(b.isoDate || b.pubDate)
+      (a, b) => {
+        const firstDate = parseItemDate(a) ?? new Date(0);
+        const secondDate = parseItemDate(b) ?? new Date(0);
+        return firstDate - secondDate;
+      }
     );
   }
 
