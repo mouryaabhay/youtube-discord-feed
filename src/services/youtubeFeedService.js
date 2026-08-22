@@ -11,7 +11,7 @@ import { loadChannelInfo, saveChannelInfo } from "../utils/channelInfoCache.js";
 import { sendSysErrorMessage } from "../utils/sysErrorEmbed.js";
 import { fileURLToPath } from "url";
 
-const { YOUTUBE_FEED } = config;
+const { DISCORD_ROLE_ID, YOUTUBE_FEED } = config;
 const __filename = fileURLToPath(import.meta.url);
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -259,6 +259,8 @@ class youtubeFeedService {
 
       await webhookClient.send({
         username: channelName,
+        content: DISCORD_ROLE_ID ? `<@&${DISCORD_ROLE_ID}>` : undefined,
+        allowedMentions: DISCORD_ROLE_ID ? { roles: [DISCORD_ROLE_ID] } : undefined,
         embeds: [embed],
         components: [actionRow],
         // Required for non-application webhooks to keep non-interactive components (link buttons).

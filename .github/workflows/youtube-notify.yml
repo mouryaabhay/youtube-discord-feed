@@ -44,6 +44,7 @@ jobs:
       - name: Check YouTube channels and notify Discord
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          DISCORD_ROLE_ID: ${{ secrets.DISCORD_ROLE_ID }}
         run: node ./src/webhookYoutubeRunner.js
 
       - name: Commit updated video state

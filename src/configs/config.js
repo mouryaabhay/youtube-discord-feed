@@ -4,10 +4,9 @@ import youtubeChannels from "./youtubeChannelsConfig.json" with { type: "json" }
 /**
  * Central runtime configuration.
  *
- * DISCORD_WEBHOOK_URL is the only secret (it grants posting access to the
- * Discord channel), so it stays in GitHub Actions Secrets / a local .env
- * file. Every other configurable value lives here so it can be changed in
- * one place without touching GitHub repo settings.
+ * Discord credentials stay in GitHub Actions Secrets / a local .env file.
+ * Every other configurable value lives here so it can be changed in one place
+ * without touching GitHub repo settings.
  *
  * Exception: the run schedule. GitHub Actions requires the cron expression
  * to be a literal string in the workflow file, so it's configured in
@@ -15,6 +14,7 @@ import youtubeChannels from "./youtubeChannelsConfig.json" with { type: "json" }
  */
 export default {
   DISCORD_WEBHOOK_URL: process.env.DISCORD_WEBHOOK_URL,
+  DISCORD_ROLE_ID: process.env.DISCORD_ROLE_ID,
 
   YOUTUBE_FEED: {
     CHANNELS: youtubeChannels.channels,

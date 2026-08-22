@@ -81,9 +81,11 @@ npm install
 
    - Go to **Settings → Secrets and variables → Actions**.
    - In **Secrets**, create `DISCORD_WEBHOOK_URL` = your Discord webhook URL.
-     This is the only value that needs to live in GitHub settings — every
-     other configurable value (description length, embed color, retry/
-     throttle timing, handle cache TTL) lives in
+     Optionally create `DISCORD_ROLE_ID` = the numeric Discord role ID to ping
+     in the message text outside the embed. To copy a role ID, enable
+     Developer Mode in Discord, right-click the role, and choose **Copy Role
+     ID**. Every other configurable value (description length, embed color,
+     retry/throttle timing, handle cache TTL) lives in
      [src/configs/config.js](src/configs/config.js).
    - Go to **Settings → Actions → General** and ensure **Workflow
      permissions** is set to **Read and write permissions** (required to
@@ -124,6 +126,7 @@ extra API call per channel).
 
 ```env
 DISCORD_WEBHOOK_URL=
+DISCORD_ROLE_ID=
 ```
 
 2. Run:
